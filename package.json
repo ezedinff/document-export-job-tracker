@@ -12,7 +12,7 @@
     "test": "jest --runInBand",
     "test:unit": "jest tests/unit --runInBand",
     "test:integration": "jest tests/integration --runInBand",
-    "test:e2e": "jest --config jest.e2e.config.js --runInBand"
+    "test:e2e": "jest --config jest.e2e.config.js --runInBand --forceExit"
   },
   "keywords": [],
   "author": "Ezedin Fedlu",
