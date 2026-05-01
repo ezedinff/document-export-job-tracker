@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document Export Job Tracker</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Document Export Job Tracker</h1>
+      <p class="subtitle">Manage CSV export jobs through a lightweight lifecycle.</p>
+
+      <section class="card">
+        <h2>Create Export Job</h2>
+        <form id="create-job-form">
+          <label for="job-name">Job name</label>
+          <input id="job-name" name="name" type="text" required />
+          <button type="submit">Create</button>
+        </form>
+        <p id="create-error" class="error"></p>
+      </section>
+
+      <section class="card">
+        <div class="row">
+          <h2>Export Jobs</h2>
+          <button id="refresh-button">Refresh</button>
+        </div>
+        <p id="list-empty">No jobs yet.</p>
+        <table id="jobs-table" hidden>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Status</th>
+              <th>CSV File</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="jobs-body"></tbody>
+        </table>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
