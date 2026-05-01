@@ -1,0 +1,42 @@
+{
+  "name": "document-export-job-tracker",
+  "version": "1.0.0",
+  "description": "Small full-stack CSV export job tracker with lean testing pipeline",
+  "main": "dist/src/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/src/server.js",
+    "dev": "ts-node src/server.ts",
+    "lint": "eslint \"src/**/*.{ts,js}\" \"tests/**/*.{ts,js}\"",
+    "db:init": "ts-node src/db/init.ts",
+    "test": "jest --runInBand",
+    "test:unit": "jest tests/unit --runInBand",
+    "test:integration": "jest tests/integration --runInBand",
+    "test:e2e": "jest --config jest.e2e.config.js --runInBand"
+  },
+  "keywords": [],
+  "author": "Ezedin Fedlu",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "better-sqlite3": "^12.9.0",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.6.0",
+    "@types/supertest": "^7.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.59.1",
+    "@typescript-eslint/parser": "^8.59.1",
+    "chromedriver": "^147.0.4",
+    "eslint": "^10.2.1",
+    "jest": "^30.3.0",
+    "selenium-webdriver": "^4.43.0",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
