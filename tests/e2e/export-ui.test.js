@@ -13,57 +13,6 @@ let serverProcess;
 let driver;
 let tempDir;
 let logFile;
-let stdoutListener;
-let stderrListener;
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function stopServerProcess(proc) {
-  if (!proc) {
-    return;
-  }
-  if (proc.exitCode !== null || proc.killed) {
-    return;
-  }
-
-  await new Promise((resolve) => {
-    let settled = false;
-    const finish = () => {
-      if (!settled) {
-        settled = true;
-        resolve();
-      }
-    };
-
-    proc.once('exit', finish);
-    proc.kill('SIGTERM');
-
-    setTimeout(() => {
-      if (proc.exitCode === null && !proc.killed) {
-        proc.kill('SIGKILL');
-      }
-    }, 3000);
-
-    setTimeout(finish, 5000);
-  });
-}
-
-async function clickButtonWithText(text) {
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    try {
-      const button = await driver.wait(until.elementLocated(By.xpath(`//button[contains(., '${text}')]`)), 5000);
-      await button.click();
-      return;
-    } catch (error) {
-      if (attempt === 2) {
-        throw error;
-      }
-      await sleep(250);
-    }
-  }
-}
 
 async function waitForHealth(timeoutMs = 15000) {
   const start = Date.now();
@@ -101,10 +50,8 @@ describe('Export UI smoke tests', () => {
       stdio: ['ignore', 'pipe', 'pipe']
     });
 
-    stdoutListener = (data) => fs.appendFileSync(logFile, data.toString());
-    stderrListener = (data) => fs.appendFileSync(logFile, data.toString());
-    serverProcess.stdout.on('data', stdoutListener);
-    serverProcess.stderr.on('data', stderrListener);
+    serverProcess.stdout.on('data', (data) => fs.appendFileSync(logFile, data.toString()));
+    serverProcess.stderr.on('data', (data) => fs.appendFileSync(logFile, data.toString()));
 
     await waitForHealth();
 
@@ -131,13 +78,7 @@ describe('Export UI smoke tests', () => {
       await driver.quit();
     }
     if (serverProcess) {
-      if (stdoutListener) {
-        serverProcess.stdout.off('data', stdoutListener);
-      }
-      if (stderrListener) {
-        serverProcess.stderr.off('data', stderrListener);
-      }
-      await stopServerProcess(serverProcess);
+      serverProcess.kill('SIGTERM');
     }
     if (tempDir) {
       fs.rmSync(tempDir, { recursive: true, force: true });
@@ -168,9 +109,9 @@ describe('Export UI smoke tests', () => {
 
     await driver.wait(until.elementLocated(By.css('#jobs-body tr')), 5000);
 
-    await clickButtonWithText('Start');
+    await driver.findElement(By.xpath("//button[contains(., 'Start')]")).click();
     await driver.wait(until.elementLocated(By.xpath("//button[contains(., 'Complete')]")), 5000);
-    await clickButtonWithText('Complete');
+    await driver.findElement(By.xpath("//button[contains(., 'Complete')]")).click();
 
     await driver.wait(until.elementLocated(By.css("a[data-testid^='download-link-']")), 5000);
     const linkText = await driver.findElement(By.css("a[data-testid^='download-link-']")).getText();
